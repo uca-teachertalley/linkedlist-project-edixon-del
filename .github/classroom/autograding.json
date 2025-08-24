@@ -1,0 +1,54 @@
+{
+  "tests": [
+    {
+      "name": "AutoTest Setup",
+      "setup": "git clone https://github.com/TeacherTalley/LinkedList_Project_AutoTest.git",
+      "run": "cd LinkedList_Project_AutoTest && ./AutoTest_setup.sh",
+      "input": null,
+      "output": null,
+      "comparison": "exact",
+      "timeout": 10,
+      "points": 0
+    },
+    {
+      "name": "Coding Style",
+      "setup": "",
+      "run": "./LinkedList_Project_AutoTest/AutoTest_Style.sh",
+      "input": "",
+      "output": "",
+      "comparison": "exact",
+      "timeout": 10,
+      "points": 5
+    },
+    {
+      "name": "Error: Test for missing input files",
+      "setup": "",
+      "run": "./LinkedList_Project_AutoTest/AutoTest_OutputTest.py -t test_missing_file",
+      "input": "",
+      "output": "",
+      "comparison": "exact",
+      "timeout": 10,
+      "points": 10
+    },
+    {
+      "name": "Main Output",
+      "setup": "",
+      "run": "./LinkedList_Project_AutoTest/AutoTest_OutputTest.py -t test_main_output",
+      "input": "",
+      "output": "",
+      "comparison": "exact",
+      "timeout": 10,
+      "points": 20
+    },
+    {
+      "name": "Final Movies List",
+      "setup": "",
+      "run": "./LinkedList_Project_AutoTest/AutoTest_OutputTest.py -t test_output_file",
+      "input": "",
+      "output": "",
+      "comparison": "exact",
+      "timeout": 10,
+      "points": 30
+    }
+  ]
+}
