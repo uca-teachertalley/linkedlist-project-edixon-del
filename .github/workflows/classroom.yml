@@ -1,19 +1,90 @@
-name: GitHub Classroom Workflow
-
-on:
-  - push
-  - workflow_dispatch
-
+name: Autograding Tests
+'on':
+- push
+- repository_dispatch
 permissions:
   checks: write
   actions: read
   contents: read
-
 jobs:
-  build:
-    name: Autograding
+  run-autograding-tests:
     runs-on: ubuntu-latest
     if: github.actor != 'github-classroom[bot]'
     steps:
-      - uses: actions/checkout@v4
-      - uses: education/autograding@v1
+    - name: Checkout code
+      uses: actions/checkout@v4
+    - name: AutoTest Setup
+      id: autotest-setup
+      uses: classroom-resources/autograding-command-grader@v1
+      with:
+        test-name: AutoTest Setup
+        setup-command: git clone https://github.com/TeacherTalley/LinkedList_Project_AutoTest.git
+        command: cd LinkedList_Project_AutoTest && ./AutoTest_setup.sh
+        timeout: 10
+        max-score: 0
+    - name: Coding Style
+      id: coding-style
+      uses: classroom-resources/autograding-command-grader@v1
+      with:
+        test-name: Coding Style
+        setup-command: ''
+        command: "./LinkedList_Project_AutoTest/AutoTest_Style.sh LinkedList_Project_AutoTest main.cpp"
+        timeout: 10
+        max-score: 10
+    - name: 'Error: Test for missing input files'
+      id: error-test-for-missing-input-files
+      uses: classroom-resources/autograding-command-grader@v1
+      with:
+        test-name: 'Error: Test for missing input files'
+        setup-command: ''
+        command: "./LinkedList_Project_AutoTest/AutoTest_OutputTest.py -t test_missing_file"
+        timeout: 10
+        max-score: 10
+    - name: Main Output
+      id: main-output
+      uses: classroom-resources/autograding-command-grader@v1
+      with:
+        test-name: Main Output
+        setup-command: ''
+        command: "./LinkedList_Project_AutoTest/AutoTest_OutputTest.py -t test_main_output"
+        timeout: 10
+        max-score: 20
+    - name: Final Movies List
+      id: final-movies-list
+      uses: classroom-resources/autograding-command-grader@v1
+      with:
+        test-name: Final Movies List
+        setup-command: ''
+        command: "./LinkedList_Project_AutoTest/AutoTest_OutputTest.py -t test_output_file"
+        timeout: 10
+        max-score: 20
+    - name: Test Adds
+      id: test-adds
+      uses: classroom-resources/autograding-command-grader@v1
+      with:
+        test-name: Test Adds
+        setup-command: ''
+        command: "./LinkedList_Project_AutoTest/AutoTest_OutputTest.py -t test_adds"
+        timeout: 10
+        max-score: 20
+    - name: Test Deletes
+      id: test-deletes
+      uses: classroom-resources/autograding-command-grader@v1
+      with:
+        test-name: Test Deletes
+        setup-command: ''
+        command: "./LinkedList_Project_AutoTest/AutoTest_OutputTest.py -t test_deletes"
+        timeout: 10
+        max-score: 20
+    - name: Autograding Reporter
+      uses: classroom-resources/autograding-grading-reporter@v1
+      env:
+        AUTOTEST-SETUP_RESULTS: "${{steps.autotest-setup.outputs.result}}"
+        CODING-STYLE_RESULTS: "${{steps.coding-style.outputs.result}}"
+        ERROR-TEST-FOR-MISSING-INPUT-FILES_RESULTS: "${{steps.error-test-for-missing-input-files.outputs.result}}"
+        MAIN-OUTPUT_RESULTS: "${{steps.main-output.outputs.result}}"
+        FINAL-MOVIES-LIST_RESULTS: "${{steps.final-movies-list.outputs.result}}"
+        TEST-ADDS_RESULTS: "${{steps.test-adds.outputs.result}}"
+        TEST-DELETES_RESULTS: "${{steps.test-deletes.outputs.result}}"
+      with:
+        runners: autotest-setup,coding-style,error-test-for-missing-input-files,main-output,final-movies-list,test-adds,test-deletes
